@@ -96,7 +96,7 @@ def test_mirror_verdict_names_the_swap_and_the_direction_difference():
     kind, text = ev.verdict_mirror(rows)
     assert kind == "info"
     assert "um 10,0 % (110,00 gegen 100,00); der Split bleibt 100,00" in text
-    assert "genau das Spiegelbild" in text and "(108,00 / 100,00 gegen 100,00 / 108,00)" in text and "gehört also zur Gleichstandsregel" in text
+    assert "genau das Spiegelbild" in text and "(108,00 / 100,00 gegen 100,00 / 108,00)" in text and "Leserichtungseffekt von „Füllen bis voll“" in text
 
 
 def test_mirror_verdict_with_mirrored_orders_but_equal_fill_values():
@@ -150,7 +150,7 @@ def test_price_stats_and_verdict_by_hand():
     assert (s["count"], s["more_than_min"], s["infeasible"]) == (3, 2, 1) and abs(s["mean"] - 5.0) < 1e-9 and s["max"] == 10.0
     kind, text = ev.verdict_price(100, s)
     assert kind == "warning"                                                   # Maximum 10 % ab der Schwelle
-    assert "Bei Auslastung 100 % (3 Instanzen, n = 12) fährt das Optimum in 2 Instanzen mehr Routen" in text and "im Mittel 5,0 % mehr (Maximum 10,0 %)" in text
+    assert "Bei Auslastung 100 % (3 Instanzen, n = 12) fährt das Optimum in 2 Instanzen mehr Routen" in text and "im Mittel (über die zulässigen Instanzen) 5,0 % mehr (Maximum 10,0 %)" in text
     assert "in 1 Instanzen gibt es mit der Mindestroutenzahl gar keinen zulässigen Plan" in text
     assert ev.verdict_price(90, {})[0] == "warning"
     kind, text = ev.verdict_price(90, ev.price_stats([{"seed": 1, "m": 3, "opt": 100.0, "k_opt": 3, "opt_m": 100.0}]))

@@ -239,7 +239,7 @@ def verdict_mirror(rows: list[dict]) -> tuple[str, str]:
         return "info", head + (f"Einfügen nach Split mit größerer statt kleinerer Stelle liefert genau das Spiegelbild, aber „Füllen bis voll“ ist hier in beiden Richtungen gleich "
                                f"({de(small['fwd'])}); der Split bleibt {de(small['split'])}.")
     tail = (f"Einfügen nach Split mit größerer statt kleinerer Stelle liefert genau das Spiegelbild; „Füllen bis voll“ vertauscht dabei Vorwärts- und Rückwärtswert "
-            f"({de(small['fwd'])} / {de(small['bwd'])} gegen {de(large['fwd'])} / {de(large['bwd'])}), der Split bleibt {de(small['split'])}. Der Richtungsunterschied gehört also zur Gleichstandsregel, nicht zur Reihenfolge.")
+            f"({de(small['fwd'])} / {de(small['bwd'])} gegen {de(large['fwd'])} / {de(large['bwd'])}), der Split bleibt {de(small['split'])}. Der Richtungsunterschied ist also ein Leserichtungseffekt von „Füllen bis voll“, den die Gleichstandsregel nur auswählt.")
     return "info", head + tail
 
 
@@ -260,8 +260,9 @@ def verdict_price(fill: int, stats: dict) -> tuple[str, str]:
     """Preis der Mindestflotte im Optimum (n = 12, exakt)."""
     if not stats:
         return "warning", f"Die vorberechneten Bänder fehlen ({C.BAND_FILE})."
+    mean_word = "im Mittel (über die zulässigen Instanzen)" if stats["infeasible"] else "im Mittel"
     text = (f"Bei Auslastung {fill} % ({stats['count']} Instanzen, n = 12) fährt das Optimum in {stats['more_than_min']} Instanzen mehr Routen als die Mindestroutenzahl; auf diese Zahl beschränkt "
-            f"kostet es im Mittel {pct(stats['mean'])} mehr (Maximum {pct(stats['max'])})")
+            f"kostet es {mean_word} {pct(stats['mean'])} mehr (Maximum {pct(stats['max'])})")
     if stats["infeasible"]:
         text += f"; in {stats['infeasible']} Instanzen gibt es mit der Mindestroutenzahl gar keinen zulässigen Plan"
     return ("warning" if stats["max"] >= C.GAP_WARN else "info"), text + "."
